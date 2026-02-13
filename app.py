@@ -1,18 +1,18 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-st.set_page_config(page_title="Netflix Valentine Surprise 💖", layout="wide")
+st.set_page_config(page_title="Netflix Valentine Finale 💖", layout="wide")
 
-# Replace with your photos
+# ==== CUSTOMIZE THESE ====
+her_name = "My Princess"
+your_name = "Your King"
 photos = [
     "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
     "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2",
     "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e"
 ]
 
-her_name = "My Princess"
-your_name = "Your King"
-
+# ==== HTML + JS ====
 html_code = f"""
 <!DOCTYPE html>
 <html>
@@ -25,7 +25,7 @@ html, body {{
     width:100%; height:100%;
     overflow:hidden;
     font-family: 'Segoe UI', sans-serif;
-    background: black;
+    background:black;
     color:white;
 }}
 
@@ -73,6 +73,17 @@ html, body {{
     border-radius:15px;
 }}
 
+#hiddenMessage {{
+    display:none;
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    font-size:40px;
+    background:rgba(255,255,255,0.3);
+    padding:20px;
+    border-radius:20px;
+}}
+
 #proposalScreen {{
     display:none;
     width:100%; height:100%;
@@ -107,6 +118,7 @@ html, body {{
     cursor:pointer;
     user-select:none;
 }}
+
 </style>
 </head>
 
@@ -122,7 +134,7 @@ html, body {{
 
     <div id="countdown"></div>
 
-    <div id="hiddenMessage" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:40px;background:rgba(255,255,255,0.3);padding:20px;border-radius:20px;">
+    <div id="hiddenMessage">
         You found the secret message! I ❤️ you {her_name}!
     </div>
 
@@ -154,19 +166,19 @@ setTimeout(() => {{
 const photos = {photos};
 function startSlideshow() {{
     const container = document.getElementById('slideshow');
-    photos.forEach((url,i)=>{
-        let div=document.createElement('div');
+    photos.forEach((url,i)=>{{
+        let div = document.createElement('div');
         div.className='slide';
         div.style.backgroundImage='url('+url+')';
         container.appendChild(div);
     }});
     let current=0;
     container.children[current].style.opacity=1;
-    setInterval(()=>{
+    setInterval(()=>{{
         container.children[current].style.opacity=0;
         current=(current+1)%container.children.length;
         container.children[current].style.opacity=1;
-    },4000);
+    }},4000);
 }}
 
 // ==== Countdown ====
@@ -180,16 +192,16 @@ function startCountdown() {{
         let h=Math.floor(diff/1000/60/60)%24;
         let m=Math.floor(diff/1000/60)%60;
         let s=Math.floor(diff/1000)%60;
-        countdown.innerHTML=`Valentine's in ${d}d ${h}h ${m}m ${s}s`;
+        countdown.innerHTML=`Valentine's in ${{d}}d ${{h}}h ${{m}}m ${{s}}s`;
     }},1000);
 }}
 
 // ==== Hidden Message ====
-document.body.addEventListener('click',(e)=>{
-    if(Math.random()<0.01){ // small chance to unlock hidden message
+document.body.addEventListener('click',(e)=>{{
+    if(Math.random()<0.01){{
         document.getElementById('hiddenMessage').style.display='block';
-    }
-});
+    }}
+}});
 
 // ==== Heart Collect Game ====
 function showGame(){{
