@@ -1,9 +1,9 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-st.set_page_config(page_title="Netflix Valentine Finale 💖", layout="wide")
+st.set_page_config(page_title="Valentine Surprise 💖", layout="wide")
 
-# ==== CUSTOMIZE ====
+# ---- Customize ----
 her_name = "My Princess"
 your_name = "Your King"
 photos = [
@@ -17,7 +17,7 @@ html_code = f"""
 <html>
 <head>
 <meta charset="UTF-8">
-<title>💘 Netflix Valentine Finale 💘</title>
+<title>Valentine Surprise 💖</title>
 <style>
 html, body {{
     margin:0; padding:0;
@@ -34,7 +34,6 @@ html, body {{
     display:flex;
     justify-content:center;
     align-items:center;
-    flex-direction:column;
     font-size:50px;
     z-index:10;
 }}
@@ -172,7 +171,7 @@ function startSlideshow() {{
 // ==== Countdown ====
 function startCountdown() {{
     const countdown = document.getElementById('countdown');
-    const target = new Date(new Date().getFullYear(),1,14); // Feb 14
+    const target = new Date(new Date().getFullYear(),1,14);
     setInterval(()=>{{
         let now=new Date();
         let diff=target-now;
