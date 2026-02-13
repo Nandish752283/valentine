@@ -3,7 +3,6 @@ import streamlit.components.v1 as components
 
 st.set_page_config(page_title="Valentine Surprise 💖", layout="wide")
 
-# ---- Customize ----
 her_name = "My Princess"
 your_name = "Your King"
 photos = [
@@ -24,17 +23,26 @@ html, body {{
     width:100%; height:100%;
     overflow:hidden;
     font-family: 'Segoe UI', sans-serif;
-    background:black;
-    color:white;
+}}
+body {{
+    background: url('https://images.unsplash.com/photo-1556909190-9f7d5a2f2c9e?auto=format&fit=crop&w=1470&q=80') center/cover no-repeat;
+}}
+.glass {{
+    position:absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+    backdrop-filter: blur(10px) brightness(1.2);
+    background: rgba(255,255,255,0.2);
 }}
 #loadingScreen {{
     position:fixed;
     width:100%; height:100%;
-    background:black;
+    background:rgba(0,0,0,0.7);
     display:flex;
     justify-content:center;
     align-items:center;
     font-size:50px;
+    color:#ffc0cb;
     z-index:10;
 }}
 #mainContent {{
@@ -61,9 +69,11 @@ html, body {{
     top:20px; left:50%;
     transform:translateX(-50%);
     font-size:35px;
-    background:rgba(0,0,0,0.4);
+    background:rgba(255,255,255,0.3);
     padding:10px 20px;
-    border-radius:15px;
+    border-radius:20px;
+    color:#800000;
+    font-weight:bold;
 }}
 #hiddenMessage {{
     display:none;
@@ -71,49 +81,69 @@ html, body {{
     top:50%; left:50%;
     transform:translate(-50%,-50%);
     font-size:40px;
-    background:rgba(255,255,255,0.3);
+    background:rgba(255,255,255,0.4);
     padding:20px;
-    border-radius:20px;
+    border-radius:25px;
+    color:#ff1493;
+    text-align:center;
 }}
 #proposalScreen {{
     display:none;
     width:100%; height:100%;
     position:absolute;
     top:0; left:0;
-    background:black;
+    background:rgba(255,182,193,0.4);
     justify-content:center;
     align-items:center;
     flex-direction:column;
     display:flex;
     font-size:50px;
     z-index:20;
-    color:#ff4e8a;
+    color:#ff1493;
+    text-align:center;
 }}
 #gameScreen {{
     display:none;
     width:100%; height:100%;
     position:absolute;
     top:0; left:0;
-    background:rgba(0,0,0,0.9);
+    background:rgba(255,192,203,0.3);
     justify-content:center;
     align-items:center;
     flex-direction:column;
     display:flex;
     z-index:15;
 }}
+button {{
+    cursor:pointer;
+    border:none;
+    border-radius:15px;
+    padding:15px 30px;
+    font-size:25px;
+}}
+#yesBtn {{
+    background-color:#ff69b4;
+    color:white;
+}}
+#noBtn {{
+    background-color:#c71585;
+    color:white;
+    position:absolute;
+    top:50%;
+    left:55%;
+}}
 .heart {{
     position:absolute;
     font-size:30px;
-    cursor:pointer;
     user-select:none;
+    pointer-events:auto;
 }}
 </style>
 </head>
 <body>
 
-<div id="loadingScreen">
-    Loading Love Experience... 💖
-</div>
+<div class="glass"></div>
+<div id="loadingScreen">Loading Love Surprise... 💖</div>
 
 <div id="mainContent">
 
@@ -127,20 +157,20 @@ html, body {{
 
     <div id="gameScreen">
         <h1>Collect Hearts to Unlock 💌</h1>
-        <p>Click on all hearts to unlock the proposal!</p>
+        <p>Click all hearts to unlock the proposal!</p>
         <div id="heartsContainer"></div>
     </div>
 
     <div id="proposalScreen">
         💖 {her_name}, Will You Be My Valentine? 💍<br>
-        <button onclick="sayYes()" style="font-size:30px;padding:20px;border-radius:15px;background:#28a745;color:white;border:none;margin-top:20px;cursor:pointer;">YESSS 💖</button>
-        <button id="noBtn" style="font-size:30px;padding:20px;border-radius:15px;background:#555;color:white;border:none;position:absolute;top:50%;left:50%;margin-left:200px;">NO 😭</button>
+        <button id="yesBtn" onclick="sayYes()">YESSS 💖</button>
+        <button id="noBtn">NO 😭</button>
     </div>
 
 </div>
 
 <script>
-// ==== Loading Screen ====
+// Loading
 setTimeout(() => {{
     document.getElementById('loadingScreen').style.display='none';
     document.getElementById('mainContent').style.display='block';
@@ -149,9 +179,9 @@ setTimeout(() => {{
     showGame();
 }}, 3000);
 
-// ==== Slideshow ====
+// Slideshow
 const photos = {photos};
-function startSlideshow() {{
+function startSlideshow(){{
     const container = document.getElementById('slideshow');
     photos.forEach((url,i)=>{{
         let div = document.createElement('div');
@@ -168,8 +198,8 @@ function startSlideshow() {{
     }},4000);
 }}
 
-// ==== Countdown ====
-function startCountdown() {{
+// Countdown
+function startCountdown(){{
     const countdown = document.getElementById('countdown');
     const target = new Date(new Date().getFullYear(),1,14);
     setInterval(()=>{{
@@ -183,14 +213,14 @@ function startCountdown() {{
     }},1000);
 }}
 
-// ==== Hidden Message ====
+// Hidden message
 document.body.addEventListener('click',(e)=>{{
     if(Math.random()<0.01){{
         document.getElementById('hiddenMessage').style.display='block';
     }}
 }});
 
-// ==== Heart Collect Game ====
+// Heart game
 function showGame(){{
     const game=document.getElementById('gameScreen');
     game.style.display='flex';
@@ -215,14 +245,14 @@ function showGame(){{
     }}
 }}
 
-// ==== Proposal Screen ====
+// Proposal
 function showProposal(){{
     const proposal=document.getElementById('proposalScreen');
     proposal.style.display='flex';
     const noBtn=document.getElementById('noBtn');
     noBtn.addEventListener('mouseover',()=>{{
-        noBtn.style.left=Math.random()*80+'vw';
-        noBtn.style.top=Math.random()*80+'vh';
+        noBtn.style.left=Math.random()*70+'vw';
+        noBtn.style.top=Math.random()*70+'vh';
     }});
 }}
 
@@ -239,7 +269,6 @@ function sayYes(){{
     }}
 }}
 </script>
-
 </body>
 </html>
 """
