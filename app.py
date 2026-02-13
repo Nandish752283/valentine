@@ -5,6 +5,11 @@ st.set_page_config(page_title="Valentine Surprise 💖", layout="wide")
 
 her_name = "My Princess"
 your_name = "Your King"
+
+# Tulip farm background image
+background_image = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1470&q=80"
+
+# Slideshow images
 photos = [
     "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
     "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2",
@@ -25,7 +30,7 @@ html, body {{
     font-family: 'Segoe UI', sans-serif;
 }}
 body {{
-    background: url('https://images.unsplash.com/photo-1556909190-9f7d5a2f2c9e?auto=format&fit=crop&w=1470&q=80') center/cover no-repeat;
+    background: url('{background_image}') center/cover no-repeat;
 }}
 .glass {{
     position:absolute;
@@ -136,7 +141,6 @@ button {{
     position:absolute;
     font-size:30px;
     user-select:none;
-    pointer-events:auto;
 }}
 </style>
 </head>
@@ -146,27 +150,24 @@ button {{
 <div id="loadingScreen">Loading Love Surprise... 💖</div>
 
 <div id="mainContent">
-
     <div id="slideshow"></div>
-
     <div id="countdown"></div>
-
-    <div id="hiddenMessage">
-        You found the secret message! I ❤️ you {her_name}!
-    </div>
-
+    <div id="hiddenMessage">You found the secret message! I ❤️ you {her_name}!</div>
     <div id="gameScreen">
         <h1>Collect Hearts to Unlock 💌</h1>
-        <p>Click all hearts to unlock the proposal!</p>
+        <p>Click all hearts to unlock the quiz!</p>
         <div id="heartsContainer"></div>
     </div>
-
+    <div id="quizScreen" style="display:none;">
+        <h1>Quick Quiz! 🌸</h1>
+        <p>Do you love me more than chocolate? 🍫</p>
+        <button onclick="showProposal()">Yes! 💖</button>
+    </div>
     <div id="proposalScreen">
         💖 {her_name}, Will You Be My Valentine? 💍<br>
         <button id="yesBtn" onclick="sayYes()">YESSS 💖</button>
         <button id="noBtn">NO 😭</button>
     </div>
-
 </div>
 
 <script>
@@ -183,7 +184,7 @@ setTimeout(() => {{
 const photos = {photos};
 function startSlideshow(){{
     const container = document.getElementById('slideshow');
-    photos.forEach((url,i)=>{{
+    photos.forEach((url,i) => {{
         let div = document.createElement('div');
         div.className='slide';
         div.style.backgroundImage='url('+url+')';
@@ -213,13 +214,6 @@ function startCountdown(){{
     }},1000);
 }}
 
-// Hidden message
-document.body.addEventListener('click',(e)=>{{
-    if(Math.random()<0.01){{
-        document.getElementById('hiddenMessage').style.display='block';
-    }}
-}});
-
 // Heart game
 function showGame(){{
     const game=document.getElementById('gameScreen');
@@ -230,14 +224,14 @@ function showGame(){{
         let heart=document.createElement('div');
         heart.className='heart';
         heart.innerHTML='❤️';
-        heart.style.left=Math.random()*90+'vw';
-        heart.style.top=Math.random()*80+'vh';
+        heart.style.left=Math.random()*80+'vw';
+        heart.style.top=Math.random()*70+'vh';
         heart.onclick=function(){{
             heart.style.display='none';
             hearts[i]=true;
             if(hearts.filter(Boolean).length==10){{
                 game.style.display='none';
-                showProposal();
+                document.getElementById('quizScreen').style.display='flex';
             }}
         }};
         container.appendChild(heart);
@@ -245,8 +239,9 @@ function showGame(){{
     }}
 }}
 
-// Proposal
+// Proposal & NO button
 function showProposal(){{
+    document.getElementById('quizScreen').style.display='none';
     const proposal=document.getElementById('proposalScreen');
     proposal.style.display='flex';
     const noBtn=document.getElementById('noBtn');
@@ -255,7 +250,6 @@ function showProposal(){{
         noBtn.style.top=Math.random()*70+'vh';
     }});
 }}
-
 function sayYes(){{
     document.getElementById('proposalScreen').innerHTML=`<h1 style="font-size:60px;">💖 SHE SAID YES! 💖<br>I Love You Forever {her_name} 💍</h1>`;
     for(let i=0;i<50;i++){{
@@ -269,6 +263,7 @@ function sayYes(){{
     }}
 }}
 </script>
+
 </body>
 </html>
 """
