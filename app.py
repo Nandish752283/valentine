@@ -1,173 +1,242 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-st.set_page_config(page_title="A Special Surprise 💖", layout="centered")
+st.set_page_config(page_title="Netflix Valentine Surprise 💖", layout="wide")
 
-her_name = "My Princess"   # 👈 CHANGE THIS
-your_name = "Your King"    # 👈 CHANGE THIS
+# Replace with your photos
+photos = [
+    "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
+    "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2",
+    "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e"
+]
+
+her_name = "My Princess"
+your_name = "Your King"
 
 html_code = f"""
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<title>💘 Netflix Valentine Finale 💘</title>
 <style>
-body {{
-    margin: 0;
-    padding: 0;
-    text-align: center;
+html, body {{
+    margin:0; padding:0;
+    width:100%; height:100%;
+    overflow:hidden;
     font-family: 'Segoe UI', sans-serif;
-    background-image: url('https://images.unsplash.com/photo-1518199266791-5375a83190b7');
-    background-size: cover;
-    background-position: center;
-    color: white;
-    overflow: hidden;
+    background: black;
+    color:white;
 }}
 
-.overlay {{
-    background: rgba(0,0,0,0.6);
-    position: absolute;
-    width: 100%;
-    height: 100%;
+#loadingScreen {{
+    position:fixed;
+    width:100%; height:100%;
+    background:black;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    font-size:50px;
+    z-index:10;
 }}
 
-.container {{
-    position: relative;
-    top: 20%;
-    z-index: 2;
+#mainContent {{
+    display:none;
+    width:100%; height:100%;
+    position:relative;
 }}
 
-h1 {{
-    font-size: 55px;
+#slideshow {{
+    position:absolute;
+    width:100%; height:100%;
+    overflow:hidden;
+    z-index:-1;
 }}
 
-button {{
-    padding: 15px 35px;
-    font-size: 20px;
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    margin: 10px;
-    position: relative;
+.slide {{
+    position:absolute;
+    width:100%; height:100%;
+    background-size:cover;
+    background-position:center;
+    opacity:0;
+    transition: opacity 1.5s;
 }}
 
-#yesBtn {{
-    background-color: #ff4e8a;
-    color: white;
+#countdown {{
+    position:absolute;
+    top:20px; left:50%;
+    transform:translateX(-50%);
+    font-size:35px;
+    background:rgba(0,0,0,0.4);
+    padding:10px 20px;
+    border-radius:15px;
 }}
 
-#noBtn {{
-    background-color: #555;
-    color: white;
-    position: absolute;
+#proposalScreen {{
+    display:none;
+    width:100%; height:100%;
+    position:absolute;
+    top:0; left:0;
+    background:black;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    display:flex;
+    font-size:50px;
+    z-index:20;
+    color:#ff4e8a;
 }}
 
-.quiz {{
-    margin-top: 20px;
+#gameScreen {{
+    display:none;
+    width:100%; height:100%;
+    position:absolute;
+    top:0; left:0;
+    background:rgba(0,0,0,0.9);
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    display:flex;
+    z-index:15;
 }}
 
 .heart {{
-    position: fixed;
-    font-size: 30px;
-    animation: float 4s linear infinite;
-}}
-
-@keyframes float {{
-    0% {{ transform: translateY(100vh); }}
-    100% {{ transform: translateY(-10vh); }}
-}}
-
-.firework {{
-    position: fixed;
-    width: 10px;
-    height: 10px;
-    background: yellow;
-    border-radius: 50%;
-    animation: explode 1s ease-out forwards;
-}}
-
-@keyframes explode {{
-    0% {{ transform: scale(1); opacity:1; }}
-    100% {{ transform: scale(15); opacity:0; }}
+    position:absolute;
+    font-size:30px;
+    cursor:pointer;
+    user-select:none;
 }}
 </style>
 </head>
 
 <body>
 
-<div class="overlay"></div>
-
-<div class="container">
-
-<h1 id="typewriter"></h1>
-
-<div class="quiz" id="quizSection">
-    <p>First answer this 😏</p>
-    <p>Who loves you the most?</p>
-    <button onclick="correct()"> {your_name} 💖 </button>
-    <button onclick="wrong()"> Someone Else 😢 </button>
+<div id="loadingScreen">
+    Loading Love Experience... 💖
 </div>
 
-<div id="proposal" style="display:none;">
-    <h1>{her_name}, Will You Be My Valentine? 💘</h1>
-    <button id="yesBtn" onclick="celebrate()">YESSS 💖</button>
-    <button id="noBtn" onmouseover="moveNo()">No 😭</button>
-</div>
+<div id="mainContent">
+
+    <div id="slideshow"></div>
+
+    <div id="countdown"></div>
+
+    <div id="hiddenMessage" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:40px;background:rgba(255,255,255,0.3);padding:20px;border-radius:20px;">
+        You found the secret message! I ❤️ you {her_name}!
+    </div>
+
+    <div id="gameScreen">
+        <h1>Collect Hearts to Unlock 💌</h1>
+        <p>Click on all hearts to unlock the proposal!</p>
+        <div id="heartsContainer"></div>
+    </div>
+
+    <div id="proposalScreen">
+        💖 {her_name}, Will You Be My Valentine? 💍<br>
+        <button onclick="sayYes()" style="font-size:30px;padding:20px;border-radius:15px;background:#28a745;color:white;border:none;margin-top:20px;cursor:pointer;">YESSS 💖</button>
+        <button id="noBtn" style="font-size:30px;padding:20px;border-radius:15px;background:#555;color:white;border:none;position:absolute;top:50%;left:50%;margin-left:200px;">NO 😭</button>
+    </div>
 
 </div>
-
-<audio autoplay loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-</audio>
 
 <script>
-let text = "Hey {her_name}... I have something special for you 💌";
-let i = 0;
-function typeWriter() {{
-    if (i < text.length) {{
-        document.getElementById("typewriter").innerHTML += text.charAt(i);
-        i++;
-        setTimeout(typeWriter, 60);
+// ==== Loading Screen ====
+setTimeout(() => {{
+    document.getElementById('loadingScreen').style.display='none';
+    document.getElementById('mainContent').style.display='block';
+    startSlideshow();
+    startCountdown();
+    showGame();
+}}, 3000);
+
+// ==== Slideshow ====
+const photos = {photos};
+function startSlideshow() {{
+    const container = document.getElementById('slideshow');
+    photos.forEach((url,i)=>{
+        let div=document.createElement('div');
+        div.className='slide';
+        div.style.backgroundImage='url('+url+')';
+        container.appendChild(div);
+    }});
+    let current=0;
+    container.children[current].style.opacity=1;
+    setInterval(()=>{
+        container.children[current].style.opacity=0;
+        current=(current+1)%container.children.length;
+        container.children[current].style.opacity=1;
+    },4000);
+}}
+
+// ==== Countdown ====
+function startCountdown() {{
+    const countdown = document.getElementById('countdown');
+    const target = new Date(new Date().getFullYear(),1,14); // Feb 14
+    setInterval(()=>{{
+        let now=new Date();
+        let diff=target-now;
+        let d=Math.floor(diff/1000/60/60/24);
+        let h=Math.floor(diff/1000/60/60)%24;
+        let m=Math.floor(diff/1000/60)%60;
+        let s=Math.floor(diff/1000)%60;
+        countdown.innerHTML=`Valentine's in ${d}d ${h}h ${m}m ${s}s`;
+    }},1000);
+}}
+
+// ==== Hidden Message ====
+document.body.addEventListener('click',(e)=>{
+    if(Math.random()<0.01){ // small chance to unlock hidden message
+        document.getElementById('hiddenMessage').style.display='block';
+    }
+});
+
+// ==== Heart Collect Game ====
+function showGame(){{
+    const game=document.getElementById('gameScreen');
+    game.style.display='flex';
+    const container=document.getElementById('heartsContainer');
+    let hearts=[];
+    for(let i=0;i<10;i++){{
+        let heart=document.createElement('div');
+        heart.className='heart';
+        heart.innerHTML='❤️';
+        heart.style.left=Math.random()*90+'vw';
+        heart.style.top=Math.random()*80+'vh';
+        heart.onclick=function(){{
+            heart.style.display='none';
+            hearts[i]=true;
+            if(hearts.filter(Boolean).length==10){{
+                game.style.display='none';
+                showProposal();
+            }}
+        }};
+        container.appendChild(heart);
+        hearts.push(false);
     }}
 }}
-typeWriter();
 
-function correct() {{
-    document.getElementById("quizSection").style.display = "none";
-    document.getElementById("proposal").style.display = "block";
+// ==== Proposal Screen ====
+function showProposal(){{
+    const proposal=document.getElementById('proposalScreen');
+    proposal.style.display='flex';
+    const noBtn=document.getElementById('noBtn');
+    noBtn.addEventListener('mouseover',()=>{
+        noBtn.style.left=Math.random()*80+'vw';
+        noBtn.style.top=Math.random()*80+'vh';
+    });
 }}
 
-function wrong() {{
-    alert("Wrong answer 😏 Try again!");
-}}
-
-function moveNo() {{
-    let btn = document.getElementById("noBtn");
-    btn.style.position = "absolute";
-    btn.style.left = Math.random() * 80 + "%";
-    btn.style.top = Math.random() * 80 + "%";
-}}
-
-function celebrate() {{
-    document.body.innerHTML = `
-        <h1 style="margin-top:200px;font-size:60px;color:white;">
-        SHE SAID YESSS 😍💖<br>
-        I Love You Forever {her_name} ❤️
-        </h1>
-    `;
-    for(let i=0;i<30;i++) {{
-        let heart = document.createElement("div");
-        heart.className="heart";
-        heart.innerHTML="❤️";
-        heart.style.left=Math.random()*100+"vw";
-        heart.style.animationDuration=(Math.random()*3+2)+"s";
+function sayYes(){{
+    document.getElementById('proposalScreen').innerHTML=`<h1 style="font-size:60px;">💖 SHE SAID YES! 💖<br>I Love You Forever {her_name} 💍</h1>`;
+    for(let i=0;i<50;i++){{
+        let heart=document.createElement('div');
+        heart.className='heart';
+        heart.innerHTML='❤️';
+        heart.style.left=Math.random()*100+'vw';
+        heart.style.top=Math.random()*100+'vh';
+        heart.style.fontSize=(Math.random()*40+20)+'px';
         document.body.appendChild(heart);
-
-        let fire=document.createElement("div");
-        fire.className="firework";
-        fire.style.left=Math.random()*100+"vw";
-        fire.style.top=Math.random()*100+"vh";
-        document.body.appendChild(fire);
     }}
 }}
 </script>
@@ -176,4 +245,4 @@ function celebrate() {{
 </html>
 """
 
-components.html(html_code, height=900)
+components.html(html_code, height=1000)
