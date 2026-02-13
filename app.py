@@ -3,7 +3,7 @@ import streamlit.components.v1 as components
 
 st.set_page_config(page_title="Netflix Valentine Finale 💖", layout="wide")
 
-# ==== CUSTOMIZE THESE ====
+# ==== CUSTOMIZE ====
 her_name = "My Princess"
 your_name = "Your King"
 photos = [
@@ -12,7 +12,6 @@ photos = [
     "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e"
 ]
 
-# ==== HTML + JS ====
 html_code = f"""
 <!DOCTYPE html>
 <html>
@@ -28,7 +27,6 @@ html, body {{
     background:black;
     color:white;
 }}
-
 #loadingScreen {{
     position:fixed;
     width:100%; height:100%;
@@ -40,20 +38,17 @@ html, body {{
     font-size:50px;
     z-index:10;
 }}
-
 #mainContent {{
     display:none;
     width:100%; height:100%;
     position:relative;
 }}
-
 #slideshow {{
     position:absolute;
     width:100%; height:100%;
     overflow:hidden;
     z-index:-1;
 }}
-
 .slide {{
     position:absolute;
     width:100%; height:100%;
@@ -62,7 +57,6 @@ html, body {{
     opacity:0;
     transition: opacity 1.5s;
 }}
-
 #countdown {{
     position:absolute;
     top:20px; left:50%;
@@ -72,7 +66,6 @@ html, body {{
     padding:10px 20px;
     border-radius:15px;
 }}
-
 #hiddenMessage {{
     display:none;
     position:absolute;
@@ -83,7 +76,6 @@ html, body {{
     padding:20px;
     border-radius:20px;
 }}
-
 #proposalScreen {{
     display:none;
     width:100%; height:100%;
@@ -98,7 +90,6 @@ html, body {{
     z-index:20;
     color:#ff4e8a;
 }}
-
 #gameScreen {{
     display:none;
     width:100%; height:100%;
@@ -111,17 +102,14 @@ html, body {{
     display:flex;
     z-index:15;
 }}
-
 .heart {{
     position:absolute;
     font-size:30px;
     cursor:pointer;
     user-select:none;
 }}
-
 </style>
 </head>
-
 <body>
 
 <div id="loadingScreen">
@@ -233,10 +221,10 @@ function showProposal(){{
     const proposal=document.getElementById('proposalScreen');
     proposal.style.display='flex';
     const noBtn=document.getElementById('noBtn');
-    noBtn.addEventListener('mouseover',()=>{
+    noBtn.addEventListener('mouseover',()=>{{
         noBtn.style.left=Math.random()*80+'vw';
         noBtn.style.top=Math.random()*80+'vh';
-    });
+    }});
 }}
 
 function sayYes(){{
