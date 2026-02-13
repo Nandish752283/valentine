@@ -54,6 +54,10 @@ body {{
     display:none;
     width:100%; height:100%;
     position:relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
 }}
 #slideshow {{
     position:absolute;
@@ -156,7 +160,7 @@ button {{
     <div id="gameScreen">
         <h1>Collect Hearts to Unlock 💌</h1>
         <p>Click all hearts to unlock the quiz!</p>
-        <div id="heartsContainer"></div>
+        <div id="heartsContainer" style="position:relative;width:100%;height:80%;"></div>
     </div>
     <div id="quizScreen" style="display:none;">
         <h1>Quick Quiz! 🌸</h1>
@@ -174,7 +178,7 @@ button {{
 // Loading
 setTimeout(() => {{
     document.getElementById('loadingScreen').style.display='none';
-    document.getElementById('mainContent').style.display='block';
+    document.getElementById('mainContent').style.display='flex';
     startSlideshow();
     startCountdown();
     showGame();
@@ -224,8 +228,10 @@ function showGame(){{
         let heart=document.createElement('div');
         heart.className='heart';
         heart.innerHTML='❤️';
+        heart.style.position='absolute';
         heart.style.left=Math.random()*80+'vw';
         heart.style.top=Math.random()*70+'vh';
+        heart.style.fontSize='40px';
         heart.onclick=function(){{
             heart.style.display='none';
             hearts[i]=true;
